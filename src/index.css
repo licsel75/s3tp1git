@@ -11,3 +11,9 @@
   /* Fuente principal */
   --font-display: "Inter", sans-serif;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));  /* ← NUEVO */
+
+@theme {
+  /* ... tus colores ... */
+}
