@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { productos } from '../data/productos';
+// import { productos } from '../data/productos'; borrado para trabajar con context
 import ProductoList from '../components/ProductoList';
+import { useProductosContext } from '../context/ProductosContext';
 
 function Tienda() {
+   const { productos } = useProductosContext(); // <-- NUEVO
   const [searchTerm, setSearchTerm] = useState('');
 
   // Filtro derivado (el buscador NO está en el contexto)

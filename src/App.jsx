@@ -1,27 +1,43 @@
-import { useState } from 'react';
+import { useState } from 'react'; //Importamos el hook useState para manejar los estados locales de la UI (interfaz).
+
+//  Importamos los componentes de diseño (Layout) y el modal.
 import Navbar from './components/layout/Navbar';
 import CarritoModal from './components/CarritoModal';
+import Footer from './components/layout/Footer';
+
+//  Importamos las 3 vistas que se van a ir alternando en la pantalla.
 import Tienda from './views/Tienda';
 import Checkout from './views/Checkout';
 import Confirmacion from './views/Confirmacion';
+
+// Importamos las constantes de las vistas (para evitar errores de tipeo) y el Contexto del carrito.
 import { VISTAS } from './data/vistas';
 import { useCarritoContext } from './context/CarritoContext';
-import Footer from './components/layout/Footer';
+
 
 function App() {
+
+   //  Traemos del contexto global solo lo que App necesita: 
+   // el carrito (para validar si está vacío) y la función para vaciarlo.
   const { vaciar, carrito } = useCarritoContext();
   
-  // Estados para la UI de App
-  const [modalAbierto, setModalAbierto] = useState(false);
-  const [vistaActual, setVistaActual] = useState(VISTAS.TIENDA);
+
+  //  Estados locales de la UI: 
+  //  modalAbierto: controla si se ve o no el panel del carrito.
+  //  vistaActual: arranca en TIENDA y define qué pantalla se renderiza.  
+  const [modalAbierto, setModalAbierto] = useState(false);// el modal no se ve
+  const [vistaActual, setVistaActual] = useState(VISTAS.TIENDA);// vista principal, productos 
+  // nombreCliente: guarda el nombre para pasárselo a la pantalla de Confirmación.
   const [nombreCliente, setNombreCliente] = useState('');
 
-  // Función que se pasa al Checkout cuando se confirma el pedido
+   // Esta función la ejecuta el Checkout cuando el usuario aprieta "Confirmar Pedido".
+  // Recibe el nombre, guarda el nombre en el estado, vacía el carrito y cambia la vista a "Gracias".
   const handleConfirmarPedido = (nombre) => {
     setNombreCliente(nombre);
     vaciar(); // Vaciamos el carrito
     setVistaActual(VISTAS.CONFIRMACION); // Pasamos a la vista de gracias
   };
+
 
   // Si intentan ir al checkout con el carrito vacío, no los dejamos
   const handleIrAlCheckout = () => {
@@ -33,11 +49,17 @@ function App() {
     setVistaActual(VISTAS.CHECKOUT);
   };
 
+
+  //  Acá empieza el Layout. 
+  // "flex flex-col" y "min-h-screen" aseguran que el Footer siempre quede abajo de todo.
   return (
     <div className="min-h-screen bg-surface dark:bg-gray-900 transition-colors flex flex-col">
+      {/* 10. El Navbar recibe una prop (callback) para abrir el modal cuando tocan el botón "Carrito". */}
       <Navbar onAbrirCarrito={() => setModalAbierto(true)} />
       
-      {/* Renderizado condicional de la vista */}
+  
+       {/* Renderizado condicional: Si la vista actual es TIENDA, mostramos el componente <Tienda />. */}
+       {/* "flex-grow" hace que este div ocupe todo el espacio central disponible. */}
       <div className="flex-grow">
         {vistaActual === VISTAS.TIENDA && <Tienda />}
         

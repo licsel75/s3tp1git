@@ -1,9 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { useCarritoContext } from '../context/CarritoContext';
 import { formatearPrecio } from '../utils/formato';
+import { useProductosContext } from '../context/ProductosContext'; // nuevo importar productos desde el context
 
 function Checkout({ onVolver, onConfirmarPedido }) {
   const { carrito, total } = useCarritoContext();
+    const { descontarStock } = useProductosContext(); // <-- NUEVO
 
   // 1. Inicializamos RHF con defaultValues (para el radio)
   const {
@@ -35,7 +37,8 @@ function Checkout({ onVolver, onConfirmarPedido }) {
       items: carrito,
       total,
     };
-
+     // DESCONTAMOS EL STOCK ACÁ
+    descontarStock(carrito);
     console.log('Pedido confirmado:', pedido);
     onConfirmarPedido(datos.nombre);
   };
@@ -46,7 +49,7 @@ function Checkout({ onVolver, onConfirmarPedido }) {
         Finalizar Compra
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+     <div className="max-w-xl mx-auto flex flex-col gap-8">
         {/* Columna Izquierda: Resumen */}
         <div className="bg-white p-6 rounded-xl shadow-md dark:bg-gray-800 h-fit">
           <h3 className="text-xl font-bold mb-4 text-text dark:text-white">Resumen del pedido</h3>
