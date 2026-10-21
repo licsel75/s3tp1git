@@ -3,17 +3,18 @@ import { useCarritoContext } from '../context/CarritoContext';
 import { formatearPrecio } from '../utils/formato';
 import { useProductosContext } from '../context/ProductosContext'; // nuevo importar productos desde el context
 
+
+
 function Checkout({ onVolver, onConfirmarPedido }) {
   const { carrito, total } = useCarritoContext();
-    const { descontarStock } = useProductosContext(); // <-- NUEVO
+  const { descontarStock } = useProductosContext(); // <-- NUEVO
 
   // 1. Inicializamos RHF con defaultValues (para el radio)
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm({
+    formState: { errors },  } = useForm({
     defaultValues: {
       metodoEnvio: 'domicilio',
     },
@@ -22,7 +23,11 @@ function Checkout({ onVolver, onConfirmarPedido }) {
   // 2. watch para el campo condicional
   const metodoEnvio = watch('metodoEnvio');
 
-  // 3. onSubmit: armamos el pedido a mano
+
+
+
+
+  // 3. onSubmit: armamos el pedido a mano, solo se ejecuta si pasaron todas las validaciones RHF
   const onSubmit = (datos) => {
     const pedido = {
       cliente: {
@@ -34,11 +39,18 @@ function Checkout({ onVolver, onConfirmarPedido }) {
       },
       envio: datos.metodoEnvio,
       notas: datos.notas,
-      items: carrito,
-      total,
+      items: carrito, // Traído del CarritoContext
+      total, // Traído del CarritoContext
+
     };
-     // DESCONTAMOS EL STOCK ACÁ
+
+
+
+
+    // DESCONTAMOS EL STOCK ACÁ
     descontarStock(carrito);
+
+
     console.log('Pedido confirmado:', pedido);
     onConfirmarPedido(datos.nombre);
   };
@@ -49,11 +61,11 @@ function Checkout({ onVolver, onConfirmarPedido }) {
         Finalizar Compra
       </h2>
 
-     <div className="max-w-xl mx-auto flex flex-col gap-8">
-        {/* Columna Izquierda: Resumen */}
+      <div className="max-w-xl mx-auto flex flex-col gap-8">
+        {/*  Resumen , antes izqierga, ahora central*/}
         <div className="bg-white p-6 rounded-xl shadow-md dark:bg-gray-800 h-fit">
           <h3 className="text-xl font-bold mb-4 text-text dark:text-white">Resumen del pedido</h3>
-          
+
           <ul className="flex flex-col gap-4 mb-6">
             {carrito.map((item) => (
               <li key={item.id} className="flex justify-between items-center border-b border-gray-100 pb-2 dark:border-gray-700">
@@ -74,42 +86,49 @@ function Checkout({ onVolver, onConfirmarPedido }) {
           </div>
         </div>
 
-        {/* Columna Derecha: Formulario RHF */}
+
+
+
+
+
+
+
+        {/* DATOS DE ENVIO : Formulario RHFahora central también */}
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-xl shadow-md dark:bg-gray-800 flex flex-col gap-4">
           <h3 className="text-xl font-bold mb-2 text-text dark:text-white">Datos de envío</h3>
 
           {/* Campo 1: Nombre */}
           <div>
             <label htmlFor="nombre" className="block text-sm font-semibold mb-1 dark:text-gray-300">Nombre completo *</label>
-         <input
-  id="nombre"
-  type="text"
-  aria-invalid={errors.nombre ? "true" : "false"}
-  aria-describedby={errors.nombre ? "error-nombre" : undefined}
-  {...register('nombre', { 
-    required: 'El nombre es obligatorio',
-    minLength: { value: 3, message: 'Mínimo 3 caracteres' }
-  })}
-  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-/>
-{errors.nombre && <p id="error-nombre" className="text-red-500 text-sm mt-1">{errors.nombre.message}</p>}
+            <input
+              id="nombre"
+              type="text"
+              aria-invalid={errors.nombre ? "true" : "false"}
+              aria-describedby={errors.nombre ? "error-nombre" : undefined}
+              {...register('nombre', {
+                required: 'El nombre es obligatorio',
+                minLength: { value: 3, message: 'Mínimo 3 caracteres' }
+              })}
+              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            {errors.nombre && <p id="error-nombre" className="text-red-500 text-sm mt-1">{errors.nombre.message}</p>}
           </div>
 
           {/* Campo 2: Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-semibold mb-1 dark:text-gray-300">Email *</label>
-          <input
-  id="email"
-  type="email"
-  aria-invalid={errors.email ? "true" : "false"}
-  aria-describedby={errors.email ? "error-email" : undefined}
-  {...register('email', { 
-    required: 'El email es obligatorio',
-    pattern: { value: /^\S+@\S+$/i, message: 'Email inválido' }
-  })}
-  className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-/>
-{errors.email && <p id="error-email" className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+            <input
+              id="email"
+              type="email"
+              aria-invalid={errors.email ? "true" : "false"}
+              aria-describedby={errors.email ? "error-email" : undefined}
+              {...register('email', {
+                required: 'El email es obligatorio',
+                pattern: { value: /^\S+@\S+$/i, message: 'Email inválido' }
+              })}
+              className="w-full px-3 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            {errors.email && <p id="error-email" className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
           {/* Campo 3: Teléfono */}
@@ -118,7 +137,7 @@ function Checkout({ onVolver, onConfirmarPedido }) {
             <input
               id="telefono"
               type="tel"
-              {...register('telefono', { 
+              {...register('telefono', {
                 required: 'El teléfono es obligatorio',
                 pattern: { value: /^[0-9]+$/, message: 'Solo se permiten números' },
                 minLength: { value: 8, message: 'Mínimo 8 dígitos' }
@@ -183,12 +202,22 @@ function Checkout({ onVolver, onConfirmarPedido }) {
 
           {/* Botones */}
           <div className="flex flex-col gap-3 mt-4">
+
+
+
+
+
             <button
               type="submit"
               className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
             >
               Confirmar Pedido
             </button>
+
+
+
+
+
             <button
               type="button"
               onClick={onVolver}

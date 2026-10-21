@@ -11,7 +11,11 @@ function CarritoModal({ isOpen, onClose, onIrAlCheckout }) {
 
   const handleVaciar = () => {
     const confirmado = confirm("¿Seguro que querés vaciar el carrito?");
-    if (confirmado) vaciar();
+     if (confirmado) {
+    vaciar();    // 1. Vacía el estado del carrito
+    onClose();   // 2. Cierra el modal (función que viene por props desde App.jsx)
+  }
+
   };
 
   return (

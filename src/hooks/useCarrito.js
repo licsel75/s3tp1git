@@ -69,15 +69,18 @@ function useCarrito() {
     0
   );
 
+
+  
+  // retora un objeto con ocho propiedades
   return {
-    carrito,
-    cantidadTotal,
-    total,
-    estaEnElCarrito,
-    agregar,
-    cambiarCantidad,
-    quitar,
-    vaciar,
+    carrito,// array con los libros que el usuario agrgegó
+    cantidadTotal,// 3 por ejemplo
+    total,// 47000 por ejemplo
+    estaEnElCarrito,// funciones 
+    agregar,// funciones
+    cambiarCantidad,// funciones
+    quitar,// funciones
+    vaciar,// funciones
   };
 }
 

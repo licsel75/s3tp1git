@@ -1,6 +1,11 @@
+//  Importamos las funciones necesarias de React.
+// createContext: crea el "canal" de comunicación.
+// useContext: permite a los componentes "sintonizar" ese canal.
 import { createContext, useContext, useState } from 'react';
+
 import { productos as productosIniciales } from '../data/productos';
 
+//  Creamos el contexto (NO se exporta)
 const ProductosContext = createContext(null);
 
 export function ProductosProvider({ children }) {
@@ -32,8 +37,13 @@ export function ProductosProvider({ children }) {
   );
 }
 
+
+
+
+//  Creamos nuestro Custom Hook Consumidor (el que van a usar los componentes).
 export function useProductosContext() {
   const context = useContext(ProductosContext);
+  //validación 
   if (!context) {
     throw new Error("useProductosContext debe usarse dentro de ProductosProvider");
   }

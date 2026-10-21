@@ -17,10 +17,10 @@ import { useCarritoContext } from './context/CarritoContext';
 
 function App() {
 
-   //  Traemos del contexto global solo lo que App necesita: 
-   // el carrito (para validar si está vacío) y la función para vaciarlo.
+  //  Traemos del contexto global solo lo que App necesita: 
+  // el carrito (para validar si está vacío) y la función para vaciarlo.
   const { vaciar, carrito } = useCarritoContext();
-  
+
 
   //  Estados locales de la UI: 
   //  modalAbierto: controla si se ve o no el panel del carrito.
@@ -30,7 +30,7 @@ function App() {
   // nombreCliente: guarda el nombre para pasárselo a la pantalla de Confirmación.
   const [nombreCliente, setNombreCliente] = useState('');
 
-   // Esta función la ejecuta el Checkout cuando el usuario aprieta "Confirmar Pedido".
+  // Esta función la ejecuta el Checkout cuando el usuario aprieta "Confirmar Pedido".
   // Recibe el nombre, guarda el nombre en el estado, vacía el carrito y cambia la vista a "Gracias".
   const handleConfirmarPedido = (nombre) => {
     setNombreCliente(nombre);
@@ -56,22 +56,22 @@ function App() {
     <div className="min-h-screen bg-surface dark:bg-gray-900 transition-colors flex flex-col">
       {/* 10. El Navbar recibe una prop (callback) para abrir el modal cuando tocan el botón "Carrito". */}
       <Navbar onAbrirCarrito={() => setModalAbierto(true)} />
-      
-  
-       {/* Renderizado condicional: Si la vista actual es TIENDA, mostramos el componente <Tienda />. */}
-       {/* "flex-grow" hace que este div ocupe todo el espacio central disponible. */}
+
+
+      {/* Renderizado condicional: Si la vista actual es TIENDA, mostramos el componente <Tienda />. */}
+      {/* "flex-grow" hace que este div ocupe todo el espacio central disponible. */}
       <div className="flex-grow">
         {vistaActual === VISTAS.TIENDA && <Tienda />}
-        
+
         {vistaActual === VISTAS.CHECKOUT && (
-          <Checkout 
+          <Checkout
             onVolver={() => setVistaActual(VISTAS.TIENDA)}
             onConfirmarPedido={handleConfirmarPedido}
           />
         )}
-        
+
         {vistaActual === VISTAS.CONFIRMACION && (
-          <Confirmacion 
+          <Confirmacion
             nombreCliente={nombreCliente}
             onVolverALaTienda={() => setVistaActual(VISTAS.TIENDA)}
           />
@@ -79,7 +79,7 @@ function App() {
 
 
       </div>
-          <Footer />
+      <Footer />
       {/* Modal del carrito (solo se ve en la tienda, por lógica) */}
       <CarritoModal
         isOpen={modalAbierto}
