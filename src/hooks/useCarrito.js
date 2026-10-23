@@ -7,14 +7,15 @@ function useCarrito() {
 
   // Agregar un producto (si ya está, suma 1)
   const agregar = (producto) => {
+    // Al usar (prev) => { ... }, nos aseguramos de estar trabajando siempre con la última versión del estado en el momento exacto en que React lo actualiza.
     setCarrito((prev) => {
+      // priemro  buscar si existe el producto en el carrrito 
       const yaEsta = prev.find((item) => item.id === producto.id);
 
       // Si ya está en el carrito
       if (yaEsta) {
         // Si ya llegó al stock, no hace nada
         if (yaEsta.cantidad >= producto.stock) return prev;
-
         // Si no, suma 1
         return prev.map((item) =>
           item.id === producto.id
@@ -28,6 +29,9 @@ function useCarrito() {
     });
   };
 
+
+
+
   // Cambiar cantidad (suma o resta)
   const cambiarCantidad = (id, delta) => {
     setCarrito((prev) =>
@@ -35,7 +39,7 @@ function useCarrito() {
         .map((item) => {
           if (item.id !== id) return item;
 
-          const nuevaCantidad = item.cantidad + delta;
+          const nuevaCantidad = item.cantidad + delta; // parametro recibido (1 o -1)
 
           // No puede superar el stock
           if (nuevaCantidad > item.stock) return item;
@@ -46,6 +50,10 @@ function useCarrito() {
         .filter((item) => item.cantidad > 0)
     );
   };
+
+
+
+
 
   // Quitar un producto del carrito
   const quitar = (id) => {
@@ -70,7 +78,7 @@ function useCarrito() {
   );
 
 
-  
+
   // retora un objeto con ocho propiedades
   return {
     carrito,// array con los libros que el usuario agrgegó

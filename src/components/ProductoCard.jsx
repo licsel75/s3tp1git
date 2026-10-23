@@ -12,66 +12,77 @@ function ProductoCard({ producto }) {
   const sinStock = producto.stock === 0;
   const llegoAlLimite = cantidadEnCarrito >= producto.stock;
 
-  return (
-    <article className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow flex flex-col dark:bg-gray-800 dark:border dark:border-gray-700">
-      {/* Badge Destacado */}
+return (
+  <article className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow flex flex-col dark:bg-gray-800 dark:border dark:border-gray-700">
+    
+    {/* Contenedor de la imagen y el badge */}
+    <div className="relative w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700">
+      <img
+        src={producto.imagen}
+        alt={`Tapa del libro ${producto.nombre} de ${producto.autor}`}
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
+      
+      {/* Badge Destacado superpuesto en la imagen */}
       {producto.destacado && (
-        <span className="bg-accent text-white text-xs font-bold px-2 py-1 self-start m-3 rounded">
+        <span className="absolute top-3 left-3 bg-accent text-white text-xs font-bold px-2 py-1 rounded shadow-sm z-10">
           DESTACADO
         </span>
       )}
+    </div>
 
-      <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg font-bold text-text mb-1 dark:text-white">
-          {producto.nombre}
-        </h3>
-        <p className="text-sm text-gray-600 mb-2 dark:text-gray-400">
-          {producto.autor}
+    {/* Contenido de la tarjeta */}
+    <div className="p-5 flex flex-col flex-grow">
+      <h3 className="text-lg font-bold text-text mb-1 dark:text-white">
+        {producto.nombre}
+      </h3>
+      <p className="text-sm text-gray-600 mb-2 dark:text-gray-400">
+        {producto.autor}
+      </p>
+      
+      <div className="mt-auto">
+        <p className="text-xl font-bold text-primary dark:text-secondary mb-1">
+          {formatearPrecio(producto.precio)}
         </p>
         
-        <div className="mt-auto">
-          <p className="text-xl font-bold text-primary dark:text-secondary mb-1">
-            {formatearPrecio(producto.precio)}
+        {/* Mostrar stock o mensaje de encargo */}
+        {sinStock ? (
+          <p className="text-sm font-semibold text-red-500 mb-4">
+            Sin stock (se consigue por encargo)
           </p>
-          
-          {/* Mostrar stock o mensaje de encargo */}
-          {sinStock ? (
-            <p className="text-sm font-semibold text-red-500 mb-4">
-              Sin stock (se consigue por encargo)
-            </p>
-          ) : (
-            <p className="text-xs text-gray-500 mb-4 dark:text-gray-400">
-              Stock disponible: {producto.stock} unidades
-            </p>
-          )}
+        ) : (
+          <p className="text-xs text-gray-500 mb-4 dark:text-gray-400">
+            Stock disponible: {producto.stock} unidades
+          </p>
+        )}
 
-          {/* Botón de agregar */}
-          <button
-            type="button"
-            onClick={() => agregar(producto)}
-            disabled={sinStock || llegoAlLimite}
-            className={`w-full py-2 rounded-lg font-semibold transition-colors ${
-              sinStock
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500"
-                : llegoAlLimite
-                ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                : enCarrito
-                ? "bg-secondary text-white hover:bg-primary"
-                : "bg-primary text-white hover:bg-secondary"
-            }`}
-          >
-            {sinStock
-              ? "No disponible"
+        {/* Botón de agregar */}
+        <button
+          type="button"
+          onClick={() => agregar(producto)}
+          disabled={sinStock || llegoAlLimite}
+          className={`w-full py-2 rounded-lg font-semibold transition-colors ${
+            sinStock
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500"
               : llegoAlLimite
-              ? "Límite alcanzado"
+              ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
               : enCarrito
-              ? "✓ Agregar otro"
-              : "+ Agregar al carrito"}
-          </button>
-        </div>
+              ? "bg-secondary text-white hover:bg-primary"
+              : "bg-primary text-white hover:bg-secondary"
+          }`}
+        >
+          {sinStock
+            ? "No disponible"
+            : llegoAlLimite
+            ? "Límite alcanzado"
+            : enCarrito
+            ? "✓ Agregar otro"
+            : "+ Agregar al carrito"}
+        </button>
       </div>
-    </article>
-  );
-}
+    </div>
+  </article>
+);}
 
 export default ProductoCard;
